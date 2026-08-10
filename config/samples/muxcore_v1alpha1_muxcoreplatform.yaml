@@ -1,0 +1,38 @@
+apiVersion: muxcore.media/v1alpha1
+kind: MuxCorePlatform
+metadata:
+  name: minimal
+  namespace: muxcore
+spec:
+  insecureDisableTLS: true
+  coreImage: ghcr.io/muxcore-media/muxcored:v0.5.4
+  meshAddr: muxcored:9090
+  modules:
+    - name: api-rest
+      image: ghcr.io/muxcore-media/api-rest:v0.1.6
+      port: 18080
+    - name: auth-local
+      image: ghcr.io/muxcore-media/auth-local:v0.1.5
+      port: 9403
+      envFromSecret: muxcore-auth
+    - name: database-sqlite
+      image: ghcr.io/muxcore-media/database-sqlite:v0.1.5
+      port: 9405
+    - name: secrets-file
+      image: ghcr.io/muxcore-media/secrets-file:v0.1.6
+      port: 9406
+    - name: encryption-aesgcm
+      image: ghcr.io/muxcore-media/encryption-aesgcm:v0.2.6
+      port: 9407
+    - name: call-policy-default
+      image: ghcr.io/muxcore-media/call-policy-default:v0.3.3
+      port: 9408
+    - name: publish-policy-default
+      image: ghcr.io/muxcore-media/publish-policy-default:v0.2.2
+      port: 9409
+    - name: health-monitor
+      image: ghcr.io/muxcore-media/health-monitor:v0.1.5
+      port: 9410
+    - name: admin-ui
+      image: ghcr.io/muxcore-media/admin-ui:v0.1.10
+      port: 8082

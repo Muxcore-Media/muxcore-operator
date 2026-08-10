@@ -1,0 +1,99 @@
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  name: muxcoreplatforms.muxcore.media
+spec:
+  group: muxcore.media
+  names:
+    kind: MuxCorePlatform
+    listKind: MuxCorePlatformList
+    plural: muxcoreplatforms
+    shortNames:
+      - mcp
+    singular: muxcoreplatform
+  scope: Namespaced
+  versions:
+    - name: v1alpha1
+      served: true
+      storage: true
+      subresources:
+        status: {}
+      additionalPrinterColumns:
+        - name: Ready
+          type: string
+          jsonPath: .status.conditions[?(@.type=="Ready")].status
+        - name: Modules
+          type: integer
+          jsonPath: .status.readyModules
+        - name: Age
+          type: date
+          jsonPath: .metadata.creationTimestamp
+      schema:
+        openAPIV3Schema:
+          type: object
+          properties:
+            spec:
+              type: object
+              properties:
+                insecureDisableTLS:
+                  type: boolean
+                coreImage:
+                  type: string
+                  default: ghcr.io/muxcore-media/muxcored:v0.5.4
+                meshAddr:
+                  type: string
+                  default: muxcored:9090
+                modules:
+                  type: array
+                  items:
+                    type: object
+                    required: [name, image]
+                    properties:
+                      name:
+                        type: string
+                      image:
+                        type: string
+                      args:
+                        type: array
+                        items:
+                          type: string
+                      env:
+                        type: object
+                        additionalProperties:
+                          type: string
+                      envFromSecret:
+                        type: string
+                      port:
+                        type: integer
+                        format: int32
+            status:
+              type: object
+              properties:
+                observedGeneration:
+                  type: integer
+                  format: int64
+                readyModules:
+                  type: integer
+                  format: int32
+                desiredModules:
+                  type: integer
+                  format: int32
+                conditions:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      status:
+                        type: string
+                      reason:
+                        type: string
+                      message:
+                        type: string
+                      lastTransitionTime:
+                        type: string
+                        format: date-time
+                      observedGeneration:
+                        type: integer
+                        format: int64
