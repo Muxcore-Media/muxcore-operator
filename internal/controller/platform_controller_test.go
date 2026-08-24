@@ -75,3 +75,60 @@ func TestPlatformReconciler_CreatesCoreAndModules(t *testing.T) {
 		t.Fatalf("DesiredModules=%d want 2", updated.Status.DesiredModules)
 	}
 }
+
+func TestPlatformReconciler_PrunesRemovedModules(t *testing.T) {
+	scheme := runtime.NewScheme()
+	_ = clientgoscheme.AddToScheme(scheme)
+	_ = muxcorev1alpha1.AddToScheme(scheme)
+
+	platform := &muxcorev1alpha1.MuxCorePlatform{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:       "demo",
+			Namespace:  "muxcore",
+			Generation: 2,
+		},
+		Spec: muxcorev1alpha1.MuxCorePlatformSpec{
+			InsecureDisableTLS: true,
+			CoreImage:          "ghcr.io/muxcore-media/muxcored:v0.5.4",
+			Modules:            []muxcorev1alpha1.ModuleSpec{},
+		},
+	}
+
+	labels := map[string]string{
+		"app.kubernetes.io/managed-by": "muxcore-operator",
+		"muxcore.media/platform":         "demo",
+		"app.kubernetes.io/part-of":      "muxcore",
+		"app.kubernetes.io/component":    "api-rest",
+	}
+	staleDep := &appsv1.Deployment{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "api-rest",
+			Namespace: "muxcore",
+			Labels:    labels,
+		},
+	}
+	staleSvc := &corev1.Service{
+		ObjectMeta: metav1.ObjectMeta{
+			Name:      "api-rest",
+			Namespace: "muxcore",
+			Labels:    labels,
+		},
+	}
+
+	c := fake.NewClientBuilder().WithScheme(scheme).WithStatusSubresource(platform).
+		WithObjects(platform, staleDep, staleSvc).Build()
+	r := &controller.PlatformReconciler{Client: c, Scheme: scheme}
+
+	_, err := r.Reconcile(context.Background(), reconcile.Request{
+		NamespacedName: types.NamespacedName{Name: "demo", Namespace: "muxcore"},
+	})
+	if err != nil {
+		t.Fatalf("Reconcile: %v", err)
+	}
+
+	var gone appsv1.Deployment
+	err = c.Get(context.Background(), types.NamespacedName{Namespace: "muxcore", Name: "api-rest"}, &gone)
+	if err == nil {
+		t.Fatal("expected stale deployment to be pruned")
+	}
+}

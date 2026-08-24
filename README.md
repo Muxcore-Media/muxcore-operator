@@ -84,4 +84,24 @@ Requires Go 1.26+. Cluster run needs a kubeconfig; unit tests use the controller
 - PVC / StorageClass wiring
 - mTLS cert injection (staging parity)
 - Helm chart packaging of the operator itself
-- Image publish from a self-hosted runner (GHCR or private registry)
+
+## Image publish (Forgejo / LAN)
+
+No GHCR `write:packages` required for origin installs:
+
+```bash
+# Build + tag (skip push):
+BUILD_ONLY=1 ./scripts/publish-operator-local.sh v0.1.0
+
+# Push to Forgejo org packages (after podman/docker login to git.zem.systems):
+./scripts/publish-operator-local.sh v0.1.0
+
+# LAN registry:
+MUXCORE_REGISTRY=localhost:5000/muxcore ./scripts/publish-operator-local.sh v0.1.0
+```
+
+Soak gate (unit tests; optional kind reconcile when `kind` is installed):
+
+```bash
+./scripts/soak-operator-kind.sh v0.1.0
+```

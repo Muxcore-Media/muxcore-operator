@@ -1,5 +1,12 @@
 # Changelog
 
+## [Unreleased]
+
+### Added
+- `scripts/publish-operator-local.sh` — Forgejo/LAN OCI publish (insecure localhost registry auto-config)
+- `scripts/soak-operator-kind.sh` — controller tests + optional kind reconcile smoke
+- Forgejo CI `image` job builds operator container (`BUILD_ONLY=1`)
+
 ## [v0.1.0] — 2026-08-10
 
 ### Added
