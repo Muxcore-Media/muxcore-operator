@@ -72,7 +72,9 @@ func (r *PlatformReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	desired = append(desired, platform.Spec.Modules...)
 
 	ready := int32(0)
+	desiredNames := make(map[string]struct{}, len(desired))
 	for _, mod := range desired {
+		desiredNames[mod.Name] = struct{}{}
 		if err := r.reconcileModule(ctx, &platform, mod, meshAddr); err != nil {
 			logger.Error(err, "reconcile module", "module", mod.Name)
 			meta.SetStatusCondition(&platform.Status.Conditions, metav1.Condition{
@@ -91,6 +93,19 @@ func (r *PlatformReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 				ready++
 			}
 		}
+	}
+
+	if err := r.pruneModules(ctx, &platform, desiredNames); err != nil {
+		logger.Error(err, "prune modules")
+		meta.SetStatusCondition(&platform.Status.Conditions, metav1.Condition{
+			Type:               "Ready",
+			Status:             metav1.ConditionFalse,
+			Reason:             "PruneError",
+			Message:            err.Error(),
+			ObservedGeneration: platform.Generation,
+		})
+		_ = r.Status().Update(ctx, &platform)
+		return ctrl.Result{}, err
 	}
 
 	platform.Status.ObservedGeneration = platform.Generation
@@ -197,6 +212,40 @@ func (r *PlatformReconciler) reconcileModule(ctx context.Context, platform *muxc
 	})
 	if err != nil {
 		return fmt.Errorf("service %s: %w", mod.Name, err)
+	}
+	return nil
+}
+
+func (r *PlatformReconciler) pruneModules(ctx context.Context, platform *muxcorev1alpha1.MuxCorePlatform, desired map[string]struct{}) error {
+	labels := client.MatchingLabels{
+		labelManagedBy:           managedByValue,
+		"muxcore.media/platform": platform.Name,
+	}
+
+	var deps appsv1.DeploymentList
+	if err := r.List(ctx, &deps, client.InNamespace(platform.Namespace), labels); err != nil {
+		return fmt.Errorf("list deployments: %w", err)
+	}
+	for _, dep := range deps.Items {
+		if _, ok := desired[dep.Name]; ok {
+			continue
+		}
+		if err := r.Delete(ctx, &dep); err != nil && !apierrors.IsNotFound(err) {
+			return fmt.Errorf("delete deployment %s: %w", dep.Name, err)
+		}
+	}
+
+	var svcs corev1.ServiceList
+	if err := r.List(ctx, &svcs, client.InNamespace(platform.Namespace), labels); err != nil {
+		return fmt.Errorf("list services: %w", err)
+	}
+	for _, svc := range svcs.Items {
+		if _, ok := desired[svc.Name]; ok {
+			continue
+		}
+		if err := r.Delete(ctx, &svc); err != nil && !apierrors.IsNotFound(err) {
+			return fmt.Errorf("delete service %s: %w", svc.Name, err)
+		}
 	}
 	return nil
 }

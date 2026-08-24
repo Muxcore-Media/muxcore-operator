@@ -1,0 +1,35 @@
+apiVersion: muxcore.media/v1alpha1
+kind: MuxCorePlatform
+metadata:
+  name: acquisition
+  namespace: muxcore
+spec:
+  insecureDisableTLS: true
+  coreImage: ghcr.io/muxcore-media/muxcored:v0.5.4
+  meshAddr: muxcored:9090
+  modules:
+    - name: api-rest
+      image: ghcr.io/muxcore-media/api-rest:v0.1.6
+      port: 18080
+    - name: auth-local
+      image: ghcr.io/muxcore-media/auth-local:v0.1.5
+      port: 9403
+      envFromSecret: muxcore-auth
+    - name: database-sqlite
+      image: ghcr.io/muxcore-media/database-sqlite:v0.1.5
+      port: 9405
+    - name: media-automation
+      image: ghcr.io/muxcore-media/media-automation:v0.1.7
+      port: 9380
+    - name: indexer-torznab
+      image: ghcr.io/muxcore-media/indexer-torznab:v0.1.4
+      port: 9610
+    - name: downloader-native-torrent
+      image: ghcr.io/muxcore-media/downloader-native-torrent:v0.1.6
+      port: 9620
+    - name: downloader-sabnzbd
+      image: ghcr.io/muxcore-media/downloader-sabnzbd:v0.1.4
+      port: 9625
+    - name: downloader-debrid
+      image: ghcr.io/muxcore-media/downloader-debrid:v0.1.0
+      port: 9630
