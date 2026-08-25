@@ -109,12 +109,12 @@ func (r *PlatformReconciler) Reconcile(ctx context.Context, req ctrl.Request) (c
 	}
 
 	platform.Status.ObservedGeneration = platform.Generation
-	platform.Status.DesiredModules = int32(len(desired))
+	platform.Status.DesiredModules = int32(len(desired)) //nolint:gosec // module count is bounded by CRD spec size
 	platform.Status.ReadyModules = ready
 	readyStatus := metav1.ConditionFalse
 	reason := "Progressing"
 	msg := fmt.Sprintf("%d/%d modules available", ready, len(desired))
-	if ready == int32(len(desired)) && len(desired) > 0 {
+	if ready == int32(len(desired)) && len(desired) > 0 { //nolint:gosec // module count is bounded by CRD spec size
 		readyStatus = metav1.ConditionTrue
 		reason = "Available"
 	}
@@ -137,9 +137,9 @@ func (r *PlatformReconciler) reconcileModule(ctx context.Context, platform *muxc
 	}
 
 	labels := map[string]string{
-		labelManagedBy: managedByValue,
-		labelPartOf:    partOfValue,
-		labelComponent: mod.Name,
+		labelManagedBy:           managedByValue,
+		labelPartOf:              partOfValue,
+		labelComponent:           mod.Name,
 		"muxcore.media/platform": platform.Name,
 	}
 
@@ -183,7 +183,7 @@ func (r *PlatformReconciler) reconcileModule(ctx context.Context, platform *muxc
 		dep.Labels = labels
 		dep.Spec.Replicas = ptr.To(int32(1))
 		dep.Spec.Selector = &metav1.LabelSelector{MatchLabels: map[string]string{labelComponent: mod.Name}}
-		dep.Spec.Template.ObjectMeta.Labels = labels
+		dep.Spec.Template.Labels = labels
 		dep.Spec.Template.Spec.Containers = []corev1.Container{container}
 		return nil
 	})
@@ -198,8 +198,8 @@ func (r *PlatformReconciler) reconcileModule(ctx context.Context, platform *muxc
 		},
 	}
 	_, err = controllerutil.CreateOrUpdate(ctx, r.Client, svc, func() error {
-		if err := controllerutil.SetControllerReference(platform, svc, r.Scheme); err != nil {
-			return err
+		if refErr := controllerutil.SetControllerReference(platform, svc, r.Scheme); refErr != nil {
+			return refErr
 		}
 		svc.Labels = labels
 		svc.Spec.Selector = map[string]string{labelComponent: mod.Name}
