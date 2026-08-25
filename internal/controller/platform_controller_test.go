@@ -96,9 +96,9 @@ func TestPlatformReconciler_PrunesRemovedModules(t *testing.T) {
 
 	labels := map[string]string{
 		"app.kubernetes.io/managed-by": "muxcore-operator",
-		"muxcore.media/platform":         "demo",
-		"app.kubernetes.io/part-of":      "muxcore",
-		"app.kubernetes.io/component":    "api-rest",
+		"muxcore.media/platform":       "demo",
+		"app.kubernetes.io/part-of":    "muxcore",
+		"app.kubernetes.io/component":  "api-rest",
 	}
 	staleDep := &appsv1.Deployment{
 		ObjectMeta: metav1.ObjectMeta{
