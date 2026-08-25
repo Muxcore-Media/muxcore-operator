@@ -6,7 +6,7 @@ import (
 )
 
 // ModuleSpec describes one MuxCore sidecar Deployment owned by a Platform.
-type ModuleSpec struct {
+type ModuleSpec struct { //nolint:govet // fieldalignment: JSON field order matches kubebuilder CRD schema
 	// Name is the module id / Deployment name (e.g. api-rest).
 	Name string `json:"name"`
 	// Image is the container image (ghcr.io/muxcore-media/...).
@@ -26,7 +26,7 @@ type ModuleSpec struct {
 }
 
 // MuxCorePlatformSpec defines the desired state of MuxCorePlatform.
-type MuxCorePlatformSpec struct {
+type MuxCorePlatformSpec struct { //nolint:govet // fieldalignment: JSON field order matches kubebuilder CRD schema
 	// InsecureDisableTLS sets MUXCORE_INSECURE_DISABLE_TLS on managed pods.
 	// +optional
 	InsecureDisableTLS bool `json:"insecureDisableTLS,omitempty"`
@@ -42,7 +42,7 @@ type MuxCorePlatformSpec struct {
 }
 
 // MuxCorePlatformStatus defines the observed state of MuxCorePlatform.
-type MuxCorePlatformStatus struct {
+type MuxCorePlatformStatus struct { //nolint:govet // fieldalignment: JSON field order matches kubebuilder CRD schema
 	ObservedGeneration int64 `json:"observedGeneration,omitempty"`
 	// ReadyModules is the count of module Deployments with AvailableReplicas >= 1.
 	ReadyModules int32 `json:"readyModules,omitempty"`
