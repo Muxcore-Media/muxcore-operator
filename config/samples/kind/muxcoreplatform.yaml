@@ -1,6 +1,5 @@
-# Kind / k3d sample — local registry images only (no GHCR).
-# Build/push via workspace `_mvp/local-registry.sh` (or equivalent) to localhost:5000,
-# then load the operator image into the cluster (see README).
+# Kind / k3d soak sample — muxcored only (no sidecar image pulls).
+# Load muxcored into the cluster before soak (see scripts/soak-operator-kind.sh).
 apiVersion: muxcore.media/v1alpha1
 kind: MuxCorePlatform
 metadata:
@@ -8,34 +7,6 @@ metadata:
   namespace: muxcore
 spec:
   insecureDisableTLS: true
-  coreImage: localhost:5000/muxcore/muxcored:v0.5.4
-  meshAddr: muxcored:9090
-  modules:
-    - name: api-rest
-      image: localhost:5000/muxcore/api-rest:v0.1.6
-      port: 18080
-    - name: auth-local
-      image: localhost:5000/muxcore/auth-local:v0.1.5
-      port: 9403
-      envFromSecret: muxcore-auth
-    - name: database-sqlite
-      image: localhost:5000/muxcore/database-sqlite:v0.1.5
-      port: 9405
-    - name: secrets-file
-      image: localhost:5000/muxcore/secrets-file:v0.1.6
-      port: 9406
-    - name: encryption-aesgcm
-      image: localhost:5000/muxcore/encryption-aesgcm:v0.2.6
-      port: 9407
-    - name: call-policy-default
-      image: localhost:5000/muxcore/call-policy-default:v0.3.3
-      port: 9408
-    - name: publish-policy-default
-      image: localhost:5000/muxcore/publish-policy-default:v0.2.2
-      port: 9409
-    - name: health-monitor
-      image: localhost:5000/muxcore/health-monitor:v0.1.5
-      port: 9410
-    - name: admin-ui
-      image: localhost:5000/muxcore/admin-ui:v0.1.10
-      port: 8082
+  coreImage: muxcored:v0.5.4
+  imagePullPolicy: IfNotPresent
+  modules: []

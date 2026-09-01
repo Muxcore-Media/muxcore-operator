@@ -5,31 +5,47 @@ metadata:
   namespace: muxcore
 spec:
   insecureDisableTLS: true
-  coreImage: ghcr.io/muxcore-media/muxcored:v0.5.4
-  meshAddr: muxcored:9090
   modules:
     - name: api-rest
-      image: ghcr.io/muxcore-media/api-rest:v0.1.6
-      port: 18080
+      image: git.zem.systems/muxcore/api-rest:v0.1.6
+      httpPort: 8080
+      httpServicePort: 18080
+      grpcPort: 9400
+      healthPath: /api/v1/health
+      env:
+        API_REST_HTTP_ADDR: ":8080"
+        API_REST_GRPC_ADDR: ":9400"
     - name: auth-local
-      image: ghcr.io/muxcore-media/auth-local:v0.1.5
-      port: 9403
+      image: git.zem.systems/muxcore/auth-local:v0.1.5
+      httpPort: 9401
+      grpcPort: 9403
+      healthPath: /health
       envFromSecret: muxcore-auth
+      env:
+        AUTH_DB_PATH: /data/auth.db
+        AUTH_GRPC_ADDR: ":9403"
+        AUTH_HTTP_ADDR: ":9401"
+      volume:
+        claimName: auth-local-data
+        size: 1Gi
     - name: database-sqlite
-      image: ghcr.io/muxcore-media/database-sqlite:v0.1.5
-      port: 9405
+      image: git.zem.systems/muxcore/database-sqlite:v0.1.5
+      grpcPort: 9700
+      volume:
+        claimName: database-sqlite-data
+        size: 2Gi
     - name: media-automation
-      image: ghcr.io/muxcore-media/media-automation:v0.1.7
-      port: 9380
+      image: git.zem.systems/muxcore/media-automation:v0.1.7
+      grpcPort: 9460
     - name: indexer-torznab
-      image: ghcr.io/muxcore-media/indexer-torznab:v0.1.4
-      port: 9610
+      image: git.zem.systems/muxcore/indexer-torznab:v0.1.4
+      grpcPort: 9486
     - name: downloader-native-torrent
-      image: ghcr.io/muxcore-media/downloader-native-torrent:v0.1.6
-      port: 9620
+      image: git.zem.systems/muxcore/downloader-native-torrent:v0.1.6
+      grpcPort: 9461
     - name: downloader-sabnzbd
-      image: ghcr.io/muxcore-media/downloader-sabnzbd:v0.1.4
-      port: 9625
+      image: git.zem.systems/muxcore/downloader-sabnzbd:v0.1.4
+      grpcPort: 9620
     - name: downloader-debrid
-      image: ghcr.io/muxcore-media/downloader-debrid:v0.1.0
-      port: 9630
+      image: git.zem.systems/muxcore/downloader-debrid:v0.1.0
+      grpcPort: 9630

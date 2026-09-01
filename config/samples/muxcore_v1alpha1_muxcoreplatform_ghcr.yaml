@@ -1,0 +1,19 @@
+# Optional public-consumer mirror (GHCR). Origin default is git.zem.systems/muxcore/…
+apiVersion: muxcore.media/v1alpha1
+kind: MuxCorePlatform
+metadata:
+  name: minimal-ghcr
+  namespace: muxcore
+spec:
+  insecureDisableTLS: true
+  coreImage: ghcr.io/muxcore-media/muxcored:v0.5.4
+  modules:
+    - name: api-rest
+      image: ghcr.io/muxcore-media/api-rest:v0.1.6
+      httpPort: 8080
+      httpServicePort: 18080
+      grpcPort: 9400
+      healthPath: /api/v1/health
+      env:
+        API_REST_HTTP_ADDR: ":8080"
+        API_REST_GRPC_ADDR: ":9400"

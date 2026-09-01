@@ -21,18 +21,25 @@ spec:
         app.kubernetes.io/name: muxcore-operator
     spec:
       serviceAccountName: muxcore-operator
+      securityContext:
+        runAsNonRoot: true
       containers:
         - name: manager
-          image: ghcr.io/muxcore-media/muxcore-operator:v0.1.0
+          image: git.zem.systems/muxcore/muxcore-operator:v0.1.0
+          imagePullPolicy: IfNotPresent
           args:
             - --leader-elect=false
+            - --watch-namespace=muxcore
             - --health-probe-bind-address=:8081
-            - --metrics-bind-address=:8080
+            - --metrics-bind-address=127.0.0.1:8080
           ports:
             - name: health
               containerPort: 8081
-            - name: metrics
-              containerPort: 8080
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop: ["ALL"]
           livenessProbe:
             httpGet:
               path: /healthz

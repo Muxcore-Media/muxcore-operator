@@ -1,0 +1,10 @@
+# mTLS sample — create Secret muxcore-mesh-tls with tls.crt, tls.key, ca.crt before apply.
+apiVersion: muxcore.media/v1alpha1
+kind: MuxCorePlatform
+metadata:
+  name: minimal-tls
+  namespace: muxcore
+spec:
+  insecureDisableTLS: false
+  meshTLSSecret: muxcore-mesh-tls
+  modules: []
