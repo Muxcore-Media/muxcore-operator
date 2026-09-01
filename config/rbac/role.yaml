@@ -4,10 +4,35 @@ metadata:
   name: muxcore-operator
   namespace: muxcore-system
 ---
+# Leader election (optional; manager defaults to leader-elect=false).
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
+  name: muxcore-operator-leader-election
+rules:
+  - apiGroups: [coordination.k8s.io]
+    resources: [leases]
+    verbs: [get, list, watch, create, update, patch, delete]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: muxcore-operator-leader-election
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: muxcore-operator-leader-election
+subjects:
+  - kind: ServiceAccount
+    name: muxcore-operator
+    namespace: muxcore-system
+---
+# Namespaced reconcile scope — operator only mutates Deployments/Services/PVCs in muxcore.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
   name: muxcore-operator
+  namespace: muxcore
 rules:
   - apiGroups: [muxcore.media]
     resources: [muxcoreplatforms]
@@ -19,19 +44,17 @@ rules:
     resources: [deployments]
     verbs: [get, list, watch, create, update, patch, delete]
   - apiGroups: [""]
-    resources: [services]
+    resources: [services, persistentvolumeclaims, events]
     verbs: [get, list, watch, create, update, patch, delete]
-  - apiGroups: [""]
-    resources: [events]
-    verbs: [create, patch]
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: ClusterRoleBinding
+kind: RoleBinding
 metadata:
   name: muxcore-operator
+  namespace: muxcore
 roleRef:
   apiGroup: rbac.authorization.k8s.io
-  kind: ClusterRole
+  kind: Role
   name: muxcore-operator
 subjects:
   - kind: ServiceAccount

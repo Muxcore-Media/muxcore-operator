@@ -39,12 +39,37 @@ spec:
                   type: boolean
                 coreImage:
                   type: string
-                  default: ghcr.io/muxcore-media/muxcored:v0.5.4
+                  default: git.zem.systems/muxcore/muxcored:v0.5.4
                 meshAddr:
                   type: string
-                  default: muxcored:9090
+                meshTLSSecret:
+                  type: string
+                imagePullPolicy:
+                  type: string
+                imagePullSecrets:
+                  type: array
+                  items:
+                    type: string
+                defaultResources:
+                  type: object
+                  properties:
+                    requests:
+                      type: object
+                      additionalProperties:
+                        type: string
+                    limits:
+                      type: object
+                      additionalProperties:
+                        type: string
                 modules:
                   type: array
+                  x-kubernetes-validations:
+                    - rule: self.all(m, m.name.matches('^[a-z0-9]([-a-z0-9]*[a-z0-9])?$'))
+                      message: module names must be DNS-1123 labels
+                    - rule: self.all(m, m.name != 'muxcored')
+                      message: muxcored is reserved for the core Deployment
+                    - rule: self.size() == self.map(m, m.name).size()
+                      message: module names must be unique
                   items:
                     type: object
                     required: [name, image]
@@ -66,6 +91,39 @@ spec:
                       port:
                         type: integer
                         format: int32
+                      httpPort:
+                        type: integer
+                        format: int32
+                      httpServicePort:
+                        type: integer
+                        format: int32
+                      grpcPort:
+                        type: integer
+                        format: int32
+                      healthPath:
+                        type: string
+                      volume:
+                        type: object
+                        properties:
+                          claimName:
+                            type: string
+                          size:
+                            type: string
+                          mountPath:
+                            type: string
+                          storageClassName:
+                            type: string
+                      resources:
+                        type: object
+                        properties:
+                          requests:
+                            type: object
+                            additionalProperties:
+                              type: string
+                          limits:
+                            type: object
+                            additionalProperties:
+                              type: string
             status:
               type: object
               properties:
