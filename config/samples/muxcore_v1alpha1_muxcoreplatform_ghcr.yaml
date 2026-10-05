@@ -6,7 +6,7 @@ metadata:
   namespace: muxcore
 spec:
   insecureDisableTLS: true
-  coreImage: ghcr.io/muxcore-media/muxcored:v0.5.4
+  coreImage: ghcr.io/muxcore-media/muxcored:v0.6.7
   modules:
     - name: api-rest
       image: ghcr.io/muxcore-media/api-rest:v0.1.6

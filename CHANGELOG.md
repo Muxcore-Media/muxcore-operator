@@ -1,6 +1,10 @@
 # Changelog
 
-## [Unreleased]
+## [0.1.2] - 2026-10-05
+
+
+### Changed
+- Default muxcored image pinned to v0.6.7 (release train train-2026.10.1, FR-INS-006): API default, CRD, samples, README, soak script.
 
 ## [0.1.1] - 2026-10-05
 
