@@ -39,7 +39,7 @@ spec:
                   type: boolean
                 coreImage:
                   type: string
-                  default: ghcr.io/muxcore-media/muxcored:v0.6.7
+                  default: ghcr.io/muxcore-media/muxcored:v0.6.13
                 meshAddr:
                   type: string
                 meshTLSSecret:

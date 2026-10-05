@@ -40,7 +40,7 @@ BUILD_ONLY=1 CONTAINER_RUNTIME="$RUNTIME" ./scripts/publish-operator-local.sh "$
 "$RUNTIME" tag "localhost/muxcore-operator:${TAG}" "muxcore-operator:${TAG}"
 kind load docker-image "muxcore-operator:${TAG}" --name "$CLUSTER"
 
-CORE_TAG="${MUXCORE_CORE_TAG:-v0.6.7}"
+CORE_TAG="${MUXCORE_CORE_TAG:-v0.6.13}"
 CORE_LOCAL="localhost/muxcore/muxcored:${CORE_TAG}"
 CORE_KIND="muxcored:${CORE_TAG}"
 if "$RUNTIME" image inspect "$CORE_LOCAL" >/dev/null 2>&1; then

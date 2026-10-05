@@ -7,6 +7,6 @@ metadata:
   namespace: muxcore
 spec:
   insecureDisableTLS: true
-  coreImage: muxcored:v0.6.7
+  coreImage: muxcored:v0.6.13
   imagePullPolicy: IfNotPresent
   modules: []
