@@ -22,7 +22,7 @@ kubectl apply -f config/manager/manager.yaml
 
 kubectl create namespace muxcore
 kubectl -n muxcore create secret generic muxcore-auth \
-  --from-literal=admin-password='change-me'
+  --from-literal=admin-password="$(openssl rand -hex 16)"
 
 kubectl apply -f config/samples/muxcore_v1alpha1_muxcoreplatform.yaml
 ```
