@@ -2,10 +2,16 @@
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-10-05
+
+### Changed
+- CI runs on GitHub-hosted runners from the umbrella template; retired-origin workflows removed.
+- Dependencies resolve from published GitHub tags (no filesystem `replace`); requires core v0.6.0.
+
 ### Added
-- `scripts/publish-operator-local.sh` — Forgejo/LAN OCI publish (insecure localhost registry auto-config)
+- `scripts/publish-operator-local.sh` — LAN/GHCR OCI publish (insecure localhost registry auto-config)
 - `scripts/soak-operator-kind.sh` — controller tests + optional kind reconcile smoke
-- Forgejo CI `image` job builds operator container (`BUILD_ONLY=1`)
+- CI `image` job builds operator container (`BUILD_ONLY=1`)
 
 ## [v0.1.0] — 2026-08-10
 

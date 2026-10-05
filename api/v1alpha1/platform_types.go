@@ -6,8 +6,8 @@ import (
 )
 
 const (
-	// DefaultCoreImage is the origin registry muxcored image (Forgejo OCI).
-	DefaultCoreImage = "git.zem.systems/muxcore/muxcored:v0.5.4"
+	// DefaultCoreImage is the default muxcored image (ghcr.io/muxcore-media).
+	DefaultCoreImage = "ghcr.io/muxcore-media/muxcored:v0.5.4"
 	// ReservedModuleName is injected automatically; must not appear in spec.modules.
 	ReservedModuleName = "muxcored"
 )
@@ -40,7 +40,7 @@ type ResourceSpec struct {
 type ModuleSpec struct { //nolint:govet // fieldalignment: JSON field order matches kubebuilder CRD schema
 	// Name is the module id (e.g. api-rest). Deployment name is "<platform>-<name>".
 	Name string `json:"name"`
-	// Image is the container image (origin: git.zem.systems/muxcore/…).
+	// Image is the container image (e.g. ghcr.io/muxcore-media/…).
 	Image string `json:"image"`
 	// Args are appended to the container command.
 	// +optional
@@ -81,7 +81,7 @@ type MuxCorePlatformSpec struct { //nolint:govet // fieldalignment: JSON field o
 	// +optional
 	InsecureDisableTLS bool `json:"insecureDisableTLS,omitempty"`
 	// CoreImage is the muxcored container image.
-	// +kubebuilder:default="git.zem.systems/muxcore/muxcored:v0.5.4"
+	// +kubebuilder:default="ghcr.io/muxcore-media/muxcored:v0.5.4"
 	CoreImage string `json:"coreImage,omitempty"`
 	// MeshAddr overrides the dial address passed as MUXCORE_GRPC_ADDR on sidecars.
 	// Defaults to "<platform>-muxcored:9090".

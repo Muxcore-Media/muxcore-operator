@@ -39,7 +39,7 @@ spec:
                   type: boolean
                 coreImage:
                   type: string
-                  default: git.zem.systems/muxcore/muxcored:v0.5.4
+                  default: ghcr.io/muxcore-media/muxcored:v0.5.4
                 meshAddr:
                   type: string
                 meshTLSSecret:

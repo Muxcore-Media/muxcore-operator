@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Build muxcore-operator and tag/push to Forgejo or LAN OCI registry (no GHCR write:packages).
+# Build muxcore-operator and tag/push to a LAN OCI registry or ghcr.io/muxcore-media.
 #
 # Usage:
 #   ./scripts/publish-operator-local.sh
 #   ./scripts/publish-operator-local.sh v0.1.0
 #   BUILD_ONLY=1 ./scripts/publish-operator-local.sh v0.1.0
-#   MUXCORE_REGISTRY=git.zem.systems/muxcore ./scripts/publish-operator-local.sh v0.1.0
+#   MUXCORE_REGISTRY=ghcr.io/muxcore-media ./scripts/publish-operator-local.sh v0.1.0
 #
 # Kind/k3d soak (after publish or BUILD_ONLY):
 #   ./scripts/soak-operator-kind.sh v0.1.0
@@ -14,7 +14,7 @@ set -euo pipefail
 TAG="${1:-v0.1.0}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 BUILD_ONLY="${BUILD_ONLY:-0}"
-REGISTRY="${MUXCORE_REGISTRY:-git.zem.systems/muxcore}"
+REGISTRY="${MUXCORE_REGISTRY:-localhost:5000/muxcore}"
 
 die() { echo "FAIL: $*" >&2; exit 1; }
 
@@ -87,7 +87,7 @@ esac
 if ! "$RUNTIME" push "${push_args[@]}" "$REMOTE"; then
   cat >&2 <<ERR
 Push failed for $REMOTE.
-Forgejo: echo \$TOKEN | $RUNTIME login git.zem.systems -u <user> --password-stdin
+GHCR: echo \$TOKEN | $RUNTIME login ghcr.io -u <user> --password-stdin
 LAN: MUXCORE_REGISTRY=localhost:5000/muxcore BUILD_ONLY=0 $0 ${TAG}
 ERR
   exit 1

@@ -7,8 +7,8 @@ import (
 
 	appsv1 "k8s.io/api/apps/v1"
 	corev1 "k8s.io/api/core/v1"
-	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/api/resource"
+	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/apimachinery/pkg/runtime"
 	"k8s.io/apimachinery/pkg/types"
 	clientgoscheme "k8s.io/client-go/kubernetes/scheme"
@@ -56,7 +56,7 @@ func TestPlatformReconciler_CreatesCoreAndModules(t *testing.T) {
 			InsecureDisableTLS: true,
 			Modules: []muxcorev1alpha1.ModuleSpec{{
 				Name:            "api-rest",
-				Image:           "git.zem.systems/muxcore/api-rest:v0.1.6",
+				Image:           "ghcr.io/muxcore-media/api-rest:v0.1.6",
 				HttpPort:        8080,
 				HttpServicePort: 18080,
 				GrpcPort:        9400,
@@ -153,7 +153,7 @@ func TestPlatformReconciler_EnvFromSecret(t *testing.T) {
 			InsecureDisableTLS: true,
 			Modules: []muxcorev1alpha1.ModuleSpec{{
 				Name:          "auth-local",
-				Image:         "git.zem.systems/muxcore/auth-local:v0.1.5",
+				Image:         "ghcr.io/muxcore-media/auth-local:v0.1.5",
 				GrpcPort:      9403,
 				HttpPort:      9401,
 				EnvFromSecret: "muxcore-auth",
@@ -337,8 +337,8 @@ func TestPlatformReconciler_CreatesPVC(t *testing.T) {
 		Spec: muxcorev1alpha1.MuxCorePlatformSpec{
 			InsecureDisableTLS: true,
 			Modules: []muxcorev1alpha1.ModuleSpec{{
-				Name:  "secrets-file",
-				Image: "git.zem.systems/muxcore/secrets-file:v0.1.6",
+				Name:     "secrets-file",
+				Image:    "ghcr.io/muxcore-media/secrets-file:v0.1.6",
 				GrpcPort: 9550,
 				Volume: &muxcorev1alpha1.VolumeSpec{
 					Size: "1Gi",

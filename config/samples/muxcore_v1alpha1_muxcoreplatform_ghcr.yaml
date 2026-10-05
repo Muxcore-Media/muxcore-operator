@@ -1,4 +1,4 @@
-# Optional public-consumer mirror (GHCR). Origin default is git.zem.systems/muxcore/…
+# GHCR sample (ghcr.io/muxcore-media/…), same default registry as the main sample.
 apiVersion: muxcore.media/v1alpha1
 kind: MuxCorePlatform
 metadata:

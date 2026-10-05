@@ -1,4 +1,4 @@
-# Origin install sample (Forgejo OCI). Optional GHCR mirror: muxcore_v1alpha1_muxcoreplatform_ghcr.yaml
+# Install sample (images from ghcr.io/muxcore-media). See also: muxcore_v1alpha1_muxcoreplatform_ghcr.yaml
 apiVersion: muxcore.media/v1alpha1
 kind: MuxCorePlatform
 metadata:
@@ -16,7 +16,7 @@ spec:
       memory: 256Mi
   modules:
     - name: api-rest
-      image: git.zem.systems/muxcore/api-rest:v0.1.6
+      image: ghcr.io/muxcore-media/api-rest:v0.1.6
       httpPort: 8080
       httpServicePort: 18080
       grpcPort: 9400
@@ -25,7 +25,7 @@ spec:
         API_REST_HTTP_ADDR: ":8080"
         API_REST_GRPC_ADDR: ":9400"
     - name: auth-local
-      image: git.zem.systems/muxcore/auth-local:v0.1.5
+      image: ghcr.io/muxcore-media/auth-local:v0.1.5
       httpPort: 9401
       grpcPort: 9403
       healthPath: /health
@@ -39,30 +39,30 @@ spec:
         size: 1Gi
         mountPath: /data
     - name: database-sqlite
-      image: git.zem.systems/muxcore/database-sqlite:v0.1.5
+      image: ghcr.io/muxcore-media/database-sqlite:v0.1.5
       grpcPort: 9700
       volume:
         claimName: database-sqlite-data
         size: 2Gi
         mountPath: /data
     - name: secrets-file
-      image: git.zem.systems/muxcore/secrets-file:v0.1.6
+      image: ghcr.io/muxcore-media/secrets-file:v0.1.6
       grpcPort: 9550
       volume:
         claimName: secrets-file-data
         size: 1Gi
         mountPath: /data
     - name: encryption-aesgcm
-      image: git.zem.systems/muxcore/encryption-aesgcm:v0.2.6
+      image: ghcr.io/muxcore-media/encryption-aesgcm:v0.2.6
       grpcPort: 9601
     - name: call-policy-default
-      image: git.zem.systems/muxcore/call-policy-default:v0.3.3
+      image: ghcr.io/muxcore-media/call-policy-default:v0.3.3
       grpcPort: 9101
     - name: publish-policy-default
-      image: git.zem.systems/muxcore/publish-policy-default:v0.2.2
+      image: ghcr.io/muxcore-media/publish-policy-default:v0.2.2
       grpcPort: 9102
     - name: health-monitor
-      image: git.zem.systems/muxcore/health-monitor:v0.1.5
+      image: ghcr.io/muxcore-media/health-monitor:v0.1.5
       httpPort: 9203
       grpcPort: 9202
       healthPath: /status
@@ -70,7 +70,7 @@ spec:
         HEALTH_MONITOR_GRPC_ADDR: ":9202"
         HEALTH_MONITOR_HTTP_ADDR: ":9203"
     - name: admin-ui
-      image: git.zem.systems/muxcore/admin-ui:v0.1.10
+      image: ghcr.io/muxcore-media/admin-ui:v0.1.10
       httpPort: 8082
       healthPath: /health
       env:

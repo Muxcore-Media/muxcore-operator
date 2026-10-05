@@ -49,7 +49,7 @@ Soak gate: `./scripts/soak-operator-kind.sh v0.1.0`
 
 | Field | Purpose |
 |-------|---------|
-| `spec.coreImage` | muxcored image (default `git.zem.systems/muxcore/muxcored:v0.5.4`) |
+| `spec.coreImage` | muxcored image (default `ghcr.io/muxcore-media/muxcored:v0.5.4`) |
 | `spec.meshAddr` | Sidecar `MUXCORE_GRPC_ADDR` dial target (default `<platform>-muxcored:9090`) |
 | `spec.insecureDisableTLS` | Sets `MUXCORE_INSECURE_DISABLE_TLS=true` when true |
 | `spec.meshTLSSecret` | Secret with `tls.crt`, `tls.key`, `ca.crt` when TLS enabled |
@@ -78,15 +78,15 @@ golangci-lint run ./...
 
 Requires Go 1.26+. Unit tests use the controller-runtime fake client.
 
-## Image publish (Forgejo / LAN)
+## Image publish (LAN / GHCR)
 
 ```bash
 BUILD_ONLY=1 ./scripts/publish-operator-local.sh v0.1.0
-./scripts/publish-operator-local.sh v0.1.0   # push to git.zem.systems/muxcore
+./scripts/publish-operator-local.sh v0.1.0   # push to the LAN registry (default localhost:5000/muxcore)
 MUXCORE_REGISTRY=localhost:5000/muxcore ./scripts/publish-operator-local.sh v0.1.0
 ```
 
-GHCR (`ghcr.io/muxcore-media/*`) is an optional public-consumer mirror only.
+Default images in the CRD and samples come from `ghcr.io/muxcore-media/*`; override with `MUXCORE_REGISTRY` when publishing to a LAN registry.
 
 ## Out of scope (follow-ups)
 
