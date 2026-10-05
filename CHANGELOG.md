@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4] - 2026-10-05
+
+
+### Changed
+
+- Release train train-2026.10.3 (core v0.6.15): default muxcored image `v0.6.15` in the API default, kubebuilder marker, CRD, samples, README and soak script.
+
 ## [0.1.3] - 2026-10-05
 
 

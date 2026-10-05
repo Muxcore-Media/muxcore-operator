@@ -7,7 +7,7 @@ import (
 
 const (
 	// DefaultCoreImage is the default muxcored image (ghcr.io/muxcore-media).
-	DefaultCoreImage = "ghcr.io/muxcore-media/muxcored:v0.6.13"
+	DefaultCoreImage = "ghcr.io/muxcore-media/muxcored:v0.6.15"
 	// ReservedModuleName is injected automatically; must not appear in spec.modules.
 	ReservedModuleName = "muxcored"
 )
@@ -81,7 +81,7 @@ type MuxCorePlatformSpec struct { //nolint:govet // fieldalignment: JSON field o
 	// +optional
 	InsecureDisableTLS bool `json:"insecureDisableTLS,omitempty"`
 	// CoreImage is the muxcored container image.
-	// +kubebuilder:default="ghcr.io/muxcore-media/muxcored:v0.6.13"
+	// +kubebuilder:default="ghcr.io/muxcore-media/muxcored:v0.6.15"
 	CoreImage string `json:"coreImage,omitempty"`
 	// MeshAddr overrides the dial address passed as MUXCORE_GRPC_ADDR on sidecars.
 	// Defaults to "<platform>-muxcored:9090".

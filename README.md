@@ -49,7 +49,7 @@ Soak gate: `./scripts/soak-operator-kind.sh v0.1.0`
 
 | Field | Purpose |
 |-------|---------|
-| `spec.coreImage` | muxcored image (default `ghcr.io/muxcore-media/muxcored:v0.6.13`) |
+| `spec.coreImage` | muxcored image (default `ghcr.io/muxcore-media/muxcored:v0.6.15`) |
 | `spec.meshAddr` | Sidecar `MUXCORE_GRPC_ADDR` dial target (default `<platform>-muxcored:9090`) |
 | `spec.insecureDisableTLS` | Sets `MUXCORE_INSECURE_DISABLE_TLS=true` when true |
 | `spec.meshTLSSecret` | Secret with `tls.crt`, `tls.key`, `ca.crt` when TLS enabled |
